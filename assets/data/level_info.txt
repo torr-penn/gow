@@ -1,0 +1,9 @@
+[{class:com.gtasoft.godofwind.game.utils.LevelInfo,id:0,helm:vprj,w0:2,w1:1,w2:0,w3:3,posX:256,posY:110,playerSpeed:1,windSpeed:1,victoryBounce:0,starTwoTime:4675,starThreeTime:4040},
+{class:com.gtasoft.godofwind.game.utils.LevelInfo,id:1,helm:vjpr,w0:2,w1:3,w2:1,w3:0,posX:96,posY:96,playerSpeed:2,windSpeed:2,victoryBounce:0,starTwoTime:18640,starThreeTime:8808},
+{class:com.gtasoft.godofwind.game.utils.LevelInfo,id:2,helm:vjpr,w0:2,w1:3,w2:1,w3:0,posX:160,posY:64,playerSpeed:3,windSpeed:3,victoryBounce:0,starTwoTime:21773,starThreeTime:9208},
+{class:com.gtasoft.godofwind.game.utils.LevelInfo,id:3,helm:prvj,w0:1,w1:0,w2:2,w3:3,posX:96,posY:96,playerSpeed:4,windSpeed:4,victoryBounce:0,starTwoTime:17906,starThreeTime:10826},
+{class:com.gtasoft.godofwind.game.utils.LevelInfo,id:4,helm:rvjp,w0:0,w1:2,w2:3,w3:1,posX:95,posY:224,playerSpeed:5,windSpeed:5,victoryBounce:0,starTwoTime:11187,starThreeTime:8207},
+{class:com.gtasoft.godofwind.game.utils.LevelInfo,id:5,helm:rvjp,w0:0,w1:2,w2:3,w3:1,posX:64,posY:64,playerSpeed:7,windSpeed:9,victoryBounce:0,starTwoTime:26061,starThreeTime:21719},
+{class:com.gtasoft.godofwind.game.utils.LevelInfo,id:6,helm:vprj,w0:2,w1:1,w2:0,w3:3,posX:896,posY:896,playerSpeed:8,windSpeed:10,victoryBounce:0,starTwoTime:12739,starThreeTime:9775},
+{class:com.gtasoft.godofwind.game.utils.LevelInfo,id:7,helm:vjpr,w0:2,w1:3,w2:1,w3:1,posX:160,posY:160,playerSpeed:9,windSpeed:11,victoryBounce:0,starTwoTime:20440,starThreeTime:12226},
+{class:com.gtasoft.godofwind.game.utils.LevelInfo,id:8,helm:rvjp,w0:0,w1:2,w2:3,w3:1,posX:160,posY:160,playerSpeed:10,windSpeed:12,victoryBounce:0,starTwoTime:20090,starThreeTime:14112}]
