@@ -61,21 +61,21 @@ public class Player {
 
         Array<TextureAtlas.AtlasRegion> ta = atlastmp.findRegions("wfront");
 
-        wDown = new Animation(.15f, ta);
+        wDown = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
         wDown.setPlayMode(Animation.PlayMode.LOOP);
 
 
         ta = atlastmp.findRegions("wleft");
 
-        wLeft = new Animation(.15f, ta);
+        wLeft = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
         wLeft.setPlayMode(Animation.PlayMode.LOOP);
 
         ta = atlastmp.findRegions("wback");
-        wUp = new Animation(.15f, ta);
+        wUp = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
         wUp.setPlayMode(Animation.PlayMode.LOOP);
 
         ta = atlastmp.findRegions("sploutch");
-        wIn = new Animation(.15f, ta);
+        wIn = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
         wIn.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
 
         atlas = new TextureAtlas(Gdx.files.internal("img/link.txt"));

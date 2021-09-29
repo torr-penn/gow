@@ -1,38 +1,24 @@
 package com.gtasoft.godofwind.game.utils;
 
-import com.google.gson.annotations.Expose;
 
 public class LevelInfo {
 
 
-    @Expose
     private int id = 0;
-    @Expose
     private String helm = "vprj";
-    @Expose
     private int w0 = 0;
-    @Expose
     private int w1 = 1;
-    @Expose
     private int w2 = 2;
-    @Expose
     private int w3 = 3;
-    @Expose
     private int posX = 160;
-    @Expose
     private int posY = 160;
-    @Expose
     private int playerSpeed = 1;
-    @Expose
     private int windSpeed = 1;
-    @Expose
     private int victoryBounce = 0;
 
-    @Expose
-    private long starTwoTime = 0;
+    private int starTwoTime = 0;
 
-    @Expose
-    private long starThreeTime = 0;
+    private int starThreeTime = 0;
 
 
     public int getId() {
@@ -123,19 +109,19 @@ public class LevelInfo {
         this.victoryBounce = victoryBounce;
     }
 
-    public long getStarTwoTime() {
+    public int getStarTwoTime() {
         return starTwoTime;
     }
 
-    public void setStarTwoTime(long starTwoTime) {
+    public void setStarTwoTime(int starTwoTime) {
         this.starTwoTime = starTwoTime;
     }
 
-    public long getStarThreeTime() {
+    public int getStarThreeTime() {
         return starThreeTime;
     }
 
-    public void setStarThreeTime(long starThreeTime) {
+    public void setStarThreeTime(int starThreeTime) {
         this.starThreeTime = starThreeTime;
     }
 }

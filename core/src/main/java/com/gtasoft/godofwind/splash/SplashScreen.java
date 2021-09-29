@@ -8,12 +8,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gtasoft.godofwind.GodOfWind;
 import com.gtasoft.godofwind.ressource.GraphicTools;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SplashScreen implements Screen, ApplicationListener {
     boolean translated = false;
@@ -51,17 +50,14 @@ public class SplashScreen implements Screen, ApplicationListener {
         imgBack = new Texture(Gdx.files.internal("img/menu/bg_space_1.png"));
         imgBack.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         splashTime = System.currentTimeMillis() + 500;
-        ressourceLoadTimer = new Timer();
-        this.ressourceLoadTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
+        Timer t = new Timer();
+        t.scheduleTask(new Timer.Task() {
+            public void run() { /* some code */
                 game.ressourcesInit();
                 game.custominit();
-                ressourceLoadTimer.cancel();
-                ressourceLoadTimer.purge();
-
             }
-        }, 300);
+        }, /* Note that libgdx uses float seconds, not integer milliseconds: */ 1f);
+
     }
 
     @Override
@@ -141,7 +137,7 @@ public class SplashScreen implements Screen, ApplicationListener {
 
     @Override
     public void show() {
-
+        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
     }
 
     @Override

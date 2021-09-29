@@ -10,17 +10,13 @@ import com.badlogic.gdx.audio.Sound;
 import com.gtasoft.godofwind.game.StartScreen;
 import com.gtasoft.godofwind.game.utils.LevelUtil;
 import com.gtasoft.godofwind.options.Options;
-import com.gtasoft.godofwind.ressource.NetworkTools;
+import com.gtasoft.godofwind.ressource.*;
 import com.gtasoft.godofwind.score.Score;
 import com.gtasoft.godofwind.score.ScoreScreen;
-import com.gtasoft.godofwind.score.ScoreUtil;
 import com.gtasoft.godofwind.splash.NoInternetScreen;
 import com.gtasoft.godofwind.splash.SplashScreen;
 import com.gtasoft.godofwind.game.GameScreen;
 import com.gtasoft.godofwind.menu.MenuScreen;
-import com.gtasoft.godofwind.ressource.GraphicTools;
-import com.gtasoft.godofwind.ressource.LanguageManager;
-import com.gtasoft.godofwind.ressource.NativePlatform;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
@@ -62,9 +58,9 @@ public class GodOfWind extends Game implements ApplicationListener {
 
     public NetworkTools ntools;
     public Options op;
-    private ScoreUtil scoreUtil;
+    private IScoreUtil scoreUtil;
     private LevelUtil lu;
-    private LanguageManager lang;
+
     private NativePlatform np = null;
     private GraphicTools gt;
     private int w = 1280;
@@ -153,8 +149,8 @@ public class GodOfWind extends Game implements ApplicationListener {
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/game/ecmContemplationAndVictory.ogg"));
         playMusic();
         explodeSound = Gdx.audio.newSound(Gdx.files.internal("sound/game/explode.ogg"));
-        this.lang = LanguageManager.getInstance();
-        setScoreUtil(new ScoreUtil());
+
+        setScoreUtil(np.getScoreUtil());
         scoreScreen = new ScoreScreen(this);
         setLu(new LevelUtil());
 
@@ -211,10 +207,6 @@ public class GodOfWind extends Game implements ApplicationListener {
 
     public boolean isNetworkConnected() {
         return ntools.isNetworkConnected();
-    }
-
-    public LanguageManager getLang() {
-        return this.lang;
     }
 
 
@@ -285,11 +277,11 @@ public class GodOfWind extends Game implements ApplicationListener {
         this.score = score;
     }
 
-    public ScoreUtil getScoreUtil() {
+    public IScoreUtil getScoreUtil() {
         return scoreUtil;
     }
 
-    public void setScoreUtil(ScoreUtil scoreUtil) {
+    public void setScoreUtil(IScoreUtil scoreUtil) {
         this.scoreUtil = scoreUtil;
     }
 

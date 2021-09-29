@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class GraphicTools {
     Label labelLoad;
-    LanguageManager lm = null;
+
     Label.LabelStyle lblStyle;
     String msgLoading;
     long tx = 0;
@@ -41,8 +41,6 @@ public class GraphicTools {
         lblStyle = new Label.LabelStyle();
         lblStyle.font = this.getSkin().getFont("jaapokki");
         lblStyle.fontColor = skin.getColor("darkgreen");
-
-        lm = LanguageManager.getInstance();
 
 
         imgHiddenCell64 = new Texture(Gdx.files.internal("img/board/grid/question_cell_64.png"));
@@ -75,7 +73,7 @@ public class GraphicTools {
         imgRestart = new Texture(Gdx.files.internal("img/menu/game-retry-icon.png"));
         skin.add("imgRestart", imgRestart);
 
-        msgLoading = lm.getString("SCORE_LOADING");
+        msgLoading = "Loading..";
         labelLoad = new Label(msgLoading, getSkin());
         labelLoad.setStyle(lblStyle);
         labelLoad.setName("loading");

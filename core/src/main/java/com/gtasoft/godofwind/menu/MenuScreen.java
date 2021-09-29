@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gtasoft.godofwind.GodOfWind;
 import com.gtasoft.godofwind.game.help.HelpDialog;
 import com.gtasoft.godofwind.game.help.PreferenceDialog;
-import com.gtasoft.godofwind.ressource.LanguageManager;
 
 public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
     private static final int MenuScreenID = 100;
@@ -29,6 +28,7 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
     Label lbl_title;
     Stage stage;
     Label lbl_version;
+    Label lbl_debug;
     Label lbl_play;
     Skin skin;
     Texture imgSettings;
@@ -37,7 +37,7 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
     int w;
     int h;
     float stateTime;
-    LanguageManager lang;
+
     GodOfWind game;
     boolean translated = false;
     InputMultiplexer multiplexer;
@@ -71,7 +71,7 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
         h = 768;
         stateTime = 0f;
         sb = new SpriteBatch();
-        lang = LanguageManager.getInstance();
+
 
         skin = game.getGT().getSkin();
 
@@ -107,6 +107,10 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
         lblStyleMe.fontColor = Color.DARK_GRAY;
         lblStyleMe.font = this.skin.getFont("junction");
 
+        lbl_debug = new Label("", skin);
+        lbl_debug.setPosition(20, 150);
+        lbl_debug.setStyle(lblStyleMe);
+
 
         lbl_version = new Label(game.getVersion(), skin);
         lbl_version.setPosition(20, 20);
@@ -118,9 +122,12 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
         int wmiddle = (int) w / 2;
         int hmiddle = (int) h / 2;
 
+        lbl_title = new Label("GOD OF WIND ", skin, "title");
+        if (!game.getLu().isok()) {
 
-        lbl_title = new Label("GOD OF WIND", skin, "title");
+            lbl_version.setText(game.getVersion() + ".x");
 
+        }
         lbl_title.setAlignment(Align.center);
         lbl_title.setPosition(w / 2, h - lbl_title.getHeight() + 10, Align.center);
 
@@ -238,6 +245,7 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
         stage.addActor(btnRanking);
         stage.addActor(btnExit);
         stage.addActor(lbl_version);
+        stage.addActor(lbl_debug);
         stage.addActor(lbl_play);
         stage.addActor(lbl_title);
         multiplexer.addProcessor(stage);

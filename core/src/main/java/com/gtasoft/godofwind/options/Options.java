@@ -2,8 +2,7 @@ package com.gtasoft.godofwind.options;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.gtasoft.godofwind.ressource.FileTools;
 
 import java.util.*;
@@ -64,26 +63,12 @@ public class Options {
     }
 
     public void loadPrefs() {
-        String name = System.getProperty("user.name");
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-        try {
-            String fpref = FileTools.readFile(OP_FNAME);
-            if (fpref != null) {
-                this.user = gson.fromJson(fpref, User.class);
+        String name = "torr-penn";
+        user = new User(name);
+        user.setPrefLevel(0);
+        user.setConsentGDPR(false);
 
-            }
-            //    System.out.println("file " + " - preferences.dat - " + "contains : " + fpref);
-
-        } catch (Exception e) {
-            System.out.println("file " + " - preferences.dat - " + "cannot be read");
-            e.printStackTrace();
-        }
-        if (user == null) {
-            user = new User(name);
-            user.setPrefLevel(1);
-            user.setConsentGDPR(false);
-        }
 
     }
 

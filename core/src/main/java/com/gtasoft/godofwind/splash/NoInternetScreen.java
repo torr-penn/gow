@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import com.gtasoft.godofwind.GodOfWind;
-import com.gtasoft.godofwind.ressource.LanguageManager;
 
 public class NoInternetScreen implements Screen, ApplicationListener {
     private static ImageButton btnExit;
@@ -29,7 +28,7 @@ public class NoInternetScreen implements Screen, ApplicationListener {
     Stage stage;
     float w;
     float h;
-    LanguageManager lm;
+
     Texture imgWifi;
     Texture imgWifiup;
     Texture imgTitle;
@@ -55,8 +54,6 @@ public class NoInternetScreen implements Screen, ApplicationListener {
         camera = new OrthographicCamera();
         viewport = new FitViewport(1280, 768, camera);
 
-        lm = LanguageManager.getInstance();
-
 
     }
 
@@ -66,7 +63,7 @@ public class NoInternetScreen implements Screen, ApplicationListener {
         }
         if (actionCode == 2) {
             if (game.isNetworkConnected()) {
-                presentation.setText(lm.getString("STARTUP_INTERNET_CONNECTED"));
+                presentation.setText("Connected");
                 presentation.setColor(Color.GREEN);
                 connected = true;
                 float fpw = presentation.getPrefWidth();
@@ -159,7 +156,7 @@ public class NoInternetScreen implements Screen, ApplicationListener {
 
         stage = new Stage();
         stage.setViewport(viewport);
-        presentation = new Label(lm.getString("STARTUP_INTERNET_ERROR"), skin);
+        presentation = new Label("No Internet", skin);
         presentation.setStyle(lblStyle);
         float fpw = presentation.getMinWidth();
         presentation.setPosition(w * 0.5f - fpw / 2f, h - h / 4f - 100);

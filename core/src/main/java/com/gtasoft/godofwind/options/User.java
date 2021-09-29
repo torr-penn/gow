@@ -1,37 +1,27 @@
 package com.gtasoft.godofwind.options;
 
-import com.google.gson.annotations.Expose;
 
 public class User {
 
-    @Expose
     private String name = "anonymous";
-    @Expose
     private int langid = 0;
-    @Expose
     private int prefLevel = 2;
-    @Expose
     private int maxLevel = 1;
 
-    @Expose
     private boolean playSound = true;
 
-    @Expose
     private long lastLogin = 0;
 
 
-    @Expose
     private boolean consentGDPR = false;
 
 
-    @Expose
     private String pwd = null;
 
 
-    @Expose
     private String gid = "0";
 
-    @Expose
+
     private boolean validProfile = false;
 
     public User(String name) {

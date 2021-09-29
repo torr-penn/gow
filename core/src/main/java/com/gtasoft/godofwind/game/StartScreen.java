@@ -17,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gtasoft.godofwind.GodOfWind;
-import com.gtasoft.godofwind.game.utils.LevelUtil;
-import com.gtasoft.godofwind.ressource.LanguageManager;
 import com.gtasoft.godofwind.ressource.Point;
 import com.gtasoft.godofwind.score.Score;
 
@@ -48,7 +46,7 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
     boolean dragging = false;
     Point lastPointer;
     float stateTime;
-    LanguageManager lang;
+
     GodOfWind game;
     boolean translated = false;
     InputMultiplexer multiplexer;
@@ -88,7 +86,7 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
         createdLvl = level;
         stateTime = 0f;
         sb = new SpriteBatch();
-        lang = LanguageManager.getInstance();
+
         skin = game.getGT().getSkin();
 
         ImageButton.ImageButtonStyle ibtnStylePlay = new ImageButton.ImageButtonStyle();

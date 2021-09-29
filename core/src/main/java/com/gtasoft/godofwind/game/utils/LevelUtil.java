@@ -2,25 +2,44 @@ package com.gtasoft.godofwind.game.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
+import com.badlogic.gdx.utils.Json;
+
+
 import com.gtasoft.godofwind.game.WindManager;
 
-import java.io.FileReader;
+
+import java.io.*;
+
 
 public class LevelUtil {
-    private static final String LVL_FILENAME = "data/level_info.json";
+    private static final String LVL_FILENAME = "data/level_info.txt";
+
     private static LevelInfo[] lvl_array;
     boolean loaded = false;
+    String info = "0";
+
+    private String debug = "Y";
+
 
     public LevelUtil() {
 
         lvl_array = loadLevels();
 
+
+    }
+
+    public String lvlInfo() {
+        return info;
+    }
+
+    public boolean isok() {
+        return loaded;
+
     }
 
     public String helmName(int level) {
-        String helmName = "helm_rvjp";
+        String helmName = "rvjp";
         if (lvl_array != null) {
 
 
@@ -28,33 +47,33 @@ public class LevelUtil {
 
         }
         if (level == 0) {
-            helmName = "helm_vprj";
+            helmName = "vprj";
         }
         if (level == 1) {
-            helmName = "helm_vjpr";
+            helmName = "vjpr";
         }
 
         if (level == 4) {
-            helmName = "helm_rvjp";
+            helmName = "rvjp";
         }
 
         if (level == 2) {
-            helmName = "helm_vjpr";
+            helmName = "vjpr";
         }
         if (level == 3) {
-            helmName = "helm_prvj";
+            helmName = "prvj";
         }
         if (level == 5) {
-            helmName = "helm_rvjp";
+            helmName = "rvjp";
         }
         if (level == 6) {
-            helmName = "helm_vprj";
+            helmName = "vprj";
         }
         if (level == 7) {
-            helmName = "helm_vjpr";
+            helmName = "vjpr";
         }
         if (level == 8) {
-            helmName = "helm_rvjp";
+            helmName = "rvjp";
         }
 
         return helmName;
@@ -185,27 +204,83 @@ public class LevelUtil {
         }
     }
 
-
     public LevelInfo[] loadLevels() {
-        FileReader fr;
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        Json json = new Json();
+        debug = debug + "1";
         try {
             FileHandle file;
             file = Gdx.files.internal(LevelUtil.LVL_FILENAME);
-            if (file != null && file.exists()) {
-                String s = file.readString();
-                if (!s.isEmpty()) {
-                    LevelInfo[] li = gson.fromJson(s, LevelInfo[].class);
-                    return li;
-                }
-            } else {
-                System.out.println(" file " + LevelUtil.LVL_FILENAME + "does not exist");
-            }
-        } catch (
-                Exception e) {
-            e.printStackTrace();
+            InputStream is = file.read();
+            String essay = getStreamContent(is);
+            debug = debug + "2";
+            if (essay != null && !"".equals(essay)) {
+                debug = debug + "3";
 
+                LevelInfo[] li = json.fromJson(LevelInfo[].class, essay);
+                loaded = true;
+                debug = debug + "4" + " nb of elemnet :" + li.length;
+                return li;
+            }
+        } catch (Exception ex) {
+            debug = ex.getMessage() + " /" + debug + "5";
         }
         return null;
+    }
+
+//    public void initialize() {
+//
+//        //    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+//        Json json = new Json();
+//        try {
+//
+//            FileHandle file;
+//            file = Gdx.files.internal("data/group/.txt");
+//            if (file != null && file.exists()) {
+//                String s = file.readString();
+//                if (!s.isEmpty()) {
+//                    Letter[] lgroup = json.fromJson(Letter[].class, s);
+//                    //this.allup = json.fromJson(UserPrefs[].class, fpref);
+//                    if (lgroup != null) {
+//                        fLetter = new ArrayList<Letter>(Arrays.asList(lgroup));
+//
+//                    }
+//                }
+//            } else {
+//                System.out.println("Error : data/group/" + language.getCode() + ".txt is not a file");
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+
+
+    public String getStreamContent(InputStream inputStream) {
+        StringBuilder result = new StringBuilder();
+        try {
+
+            String newLine = "\n";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            boolean flag = false;
+
+            String line = reader.readLine();
+            while (line != null) {
+                result.append(flag ? newLine : "").append(line);
+                flag = true;
+                line = reader.readLine();
+            }
+        } catch (IOException ioe) {
+            System.out.println(" ioe error " + ioe);
+        }
+        return result.toString();
+    }
+
+    public String getDebug() {
+        return debug;
+    }
+
+    public void setDebug(String debug) {
+        this.debug = debug;
     }
 }

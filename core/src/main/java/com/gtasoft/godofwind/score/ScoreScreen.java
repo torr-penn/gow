@@ -4,7 +4,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,10 +15,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gtasoft.godofwind.GodOfWind;
 import com.gtasoft.godofwind.game.StartScreen;
-import com.gtasoft.godofwind.game.help.HelpDialog;
-import com.gtasoft.godofwind.game.help.PreferenceDialog;
-import com.gtasoft.godofwind.game.utils.LevelUtil;
-import com.gtasoft.godofwind.ressource.LanguageManager;
 
 public class ScoreScreen implements Screen, ApplicationListener, InputProcessor {
     private static final int MenuScreenID = 100;
@@ -33,7 +28,7 @@ public class ScoreScreen implements Screen, ApplicationListener, InputProcessor 
     int w;
     int h;
     float stateTime;
-    LanguageManager lang;
+
     GodOfWind game;
     boolean translated = false;
     InputMultiplexer multiplexer;
@@ -71,7 +66,7 @@ public class ScoreScreen implements Screen, ApplicationListener, InputProcessor 
         h = 768;
         stateTime = 0f;
         sb = new SpriteBatch();
-        lang = LanguageManager.getInstance();
+
 
         skin = game.getGT().getSkin();
 

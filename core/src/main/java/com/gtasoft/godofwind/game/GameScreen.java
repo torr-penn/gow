@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gtasoft.godofwind.GodOfWind;
 
@@ -28,8 +29,6 @@ import com.gtasoft.godofwind.game.utils.CloudManager;
 import com.gtasoft.godofwind.game.utils.TiledObjectUtil;
 import com.gtasoft.godofwind.ressource.Constants;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static com.gtasoft.godofwind.ressource.Constants.PPM;
 
@@ -299,46 +298,28 @@ public class GameScreen implements Screen, ApplicationListener {
             } else if (i == 3) {
                 gow.snd_top5.play();
             }
+
             Timer validTimer = new Timer();
             if (rank == 1) {
-                validTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            gow.number_1.play();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
+                validTimer.scheduleTask(new Timer.Task() {
+                    public void run() { /* some code */
+                        gow.number_1.play();
                     }
-                }, 1500);
+                }, /* Note that libgdx uses float seconds, not integer milliseconds: */ 2f);
+
             } else if (rank == 2) {
-                validTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            gow.number_2.play();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
+                validTimer.scheduleTask(new Timer.Task() {
+                    public void run() { /* some code */
+                        gow.number_2.play();
                     }
-                }, 1500);
+                }, /* Note that libgdx uses float seconds, not integer milliseconds: */ 2f);
+
             } else if (rank == 3) {
-                validTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-
-                            gow.number_3.play();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
+                validTimer.scheduleTask(new Timer.Task() {
+                    public void run() { /* some code */
+                        gow.number_3.play();
                     }
-                }, 1500);
+                }, /* Note that libgdx uses float seconds, not integer milliseconds: */ 2f);
             }
         } else {
             if (!stage.getActors().contains(btnRetry, true)) {
