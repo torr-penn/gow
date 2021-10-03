@@ -25,6 +25,9 @@ public class CloudManager {
         if (level == 2) {
             nbmax = 50;
         }
+        if (level == 9) {
+            nbmax = 200;
+        }
         if (level == 6) {
             nbmax = 30;
         }

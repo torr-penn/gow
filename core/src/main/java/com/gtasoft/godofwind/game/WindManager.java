@@ -44,6 +44,23 @@ public class WindManager {
 
     }
 
+    public int getMasterDirectionColor() {
+        if (masterDirection == RED) {
+            return 1;//RED for player
+        }
+        if (masterDirection == GREEN) {
+            return 2;//GREEN for player
+        }
+        if (masterDirection == PINK) {
+            return 3;//P for player
+        }
+
+        if (masterDirection == YELLOW) {
+            return 4;//Y for player
+        }
+        return 0;
+    }
+
     public float getWindPower() {
         return windPower;
     }

@@ -3,10 +3,6 @@ package com.gtasoft.godofwind.options;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
-import com.gtasoft.godofwind.ressource.FileTools;
-
-import java.util.*;
-
 public class Options {
 
 
@@ -20,8 +16,9 @@ public class Options {
     ErrorMode error = ErrorMode.FUN;
     //  int sound = 3;
     boolean offline = false;
-    boolean isPlaySound = true;
+    boolean playSound = true;
     private User user;
+    private float helmRotation = 0f;
 
     public Options() {
         this.loadPrefs();
@@ -50,17 +47,14 @@ public class Options {
     }
 
 
-    public void displayOptions() {
-        System.out.println("******** -  options here : ");
-
-        System.out.println(" - difficulty of the board :" + this.getDifficulty());
-
-
-    }
-
     public boolean isAudible() {
-        return isPlaySound;
+        return playSound;
     }
+
+    public void setPlaySound(boolean b) {
+        playSound = b;
+    }
+
 
     public void loadPrefs() {
 
@@ -118,6 +112,14 @@ public class Options {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public float getHelmRotation() {
+        return helmRotation;
+    }
+
+    public void setHelmRotation(float helmRotation) {
+        this.helmRotation = helmRotation;
     }
 
 

@@ -51,6 +51,7 @@ public class GraphicTools {
         setImgScoreBox(new Texture(Gdx.files.internal("img/board/score_box.png")));
         skin.add("imgScoreBox", getImgScoreBox());
 
+
         imgExit = new Texture(Gdx.files.internal("img/menu/cross-icon-small.png"));
         skin.add("imgExit", imgExit);
 

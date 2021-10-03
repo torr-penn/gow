@@ -6,6 +6,7 @@ import com.gtasoft.godofwind.game.entity.ColorZoneBody;
 import com.gtasoft.godofwind.game.entity.Player;
 import com.gtasoft.godofwind.game.entity.WallBody;
 import com.gtasoft.godofwind.game.entity.WinnerZoneBody;
+import com.gtasoft.godofwind.ressource.Point;
 
 public class MyContactListener implements ContactListener {
     int previouscolor = WindManager.GREEN;
@@ -47,8 +48,15 @@ public class MyContactListener implements ContactListener {
                 pl = (Player) fb.getUserData();
                 wb = (WallBody) fa.getUserData();
             }
-            pl.addCollision();
 
+            pl.addCollision();
+            float pointpx;
+            float pointpy;
+            for (int i = 0; i < contact.getWorldManifold().getNumberOfContactPoints(); i++) {
+                pointpx = contact.getWorldManifold().getPoints()[i].x;
+                pointpy = contact.getWorldManifold().getPoints()[i].y;
+                pl.collisionOccured(pointpx, pointpy);
+            }
 
         }
         if (isWinnerContact(fa, fb)) {
@@ -93,10 +101,41 @@ public class MyContactListener implements ContactListener {
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
+
+//        if (oldManifold.getLocalPoint() != null) {
+//            System.out.println(" manifold localpoint x: " + oldManifold.getLocalPoint().x + " y " + oldManifold.getLocalPoint().y);
+//        }
+
     }
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
+        Fixture fa = contact.getFixtureA();
+        Fixture fb = contact.getFixtureB();
+        if (fa == null || fb == null) return;
+        if (fa.getUserData() == null || fb.getUserData() == null) return;
+        if (impulse == null)
+            return;
+        if (isWallContact(fa, fb)) {
+
+            Player pl = null;
+            WallBody wb = null;
+            if (fa.getUserData() instanceof Player) {
+                pl = (Player) fa.getUserData();
+                wb = (WallBody) fb.getUserData();
+            } else {
+                pl = (Player) fb.getUserData();
+                wb = (WallBody) fa.getUserData();
+            }
+//            if (impulse.getNormalImpulses().length > 1) {
+//                //   System.out.println(" implus size normal : " + impulse.getNormalImpulses().length + " tangent " + impulse.getTangentImpulses().length + " count :" + impulse.getCount());
+//                // pl.collisionOccured(impulse.getNormalImpulses()[0], impulse.getNormalImpulses()[1], false);
+//                // pl.collisionOccured(impulse.getTangentImpulses()[0], impulse.getTangentImpulses()[1], true);
+//            }
+
+
+        }
+
     }
 
     private boolean isWallContact(Fixture a, Fixture b) {

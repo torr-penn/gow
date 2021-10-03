@@ -109,6 +109,34 @@
 	},
 	"nomusic": {
 		"imageUp": "no-music-icon"
+	},
+	"arrowtop": {
+		"imageUp": "round_button_top",
+		"imageDown": "round_button_top_pushed"
+	},
+	"arrowbottom": {
+		"imageUp": "round_button_bottom",
+		"imageDown": "round_button_bottom_pushed"
+	},
+	"arrowright": {
+		"imageUp": "round_button_right",
+		"imageDown": "round_button_right_pushed"
+	},
+	"arrowleft": {
+		"imageUp": "round_button_left",
+		"imageDown": "round_button_left_pushed"
+	},
+	"fullscreen": {
+		"imageUp": "fullscreen-icon"
+	},
+	"exitfullscreen": {
+		"imageUp": "exit-fullscreen-icon"
+	},
+	"sound": {
+		"imageUp": "sound-icon"
+	},
+	"nosound": {
+		"imageUp": "nosound-icon"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle": {
@@ -136,8 +164,8 @@
 		"fontColor": "white"
 	},
 	"time": {
-		"font": "babel",
-		"fontColor": "white"
+		"font": "jaapokki",
+		"fontColor": "darkgreen"
 	},
 	"victory": {
 		"font": "prisma",
@@ -148,6 +176,11 @@
 		"font": "monofont",
 		"fontColor": "darkgreen",
 		"background": "scrollpane"
+	},
+	"infostar": {
+		"font": "babel",
+		"fontColor": "yellow",
+		"background": "infoStar"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {

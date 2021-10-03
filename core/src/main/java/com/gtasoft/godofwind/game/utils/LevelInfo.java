@@ -19,7 +19,7 @@ public class LevelInfo {
     private int starTwoTime = 0;
 
     private int starThreeTime = 0;
-
+    private String label = "level";
 
     public int getId() {
         return id;
@@ -123,5 +123,13 @@ public class LevelInfo {
 
     public void setStarThreeTime(int starThreeTime) {
         this.starThreeTime = starThreeTime;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

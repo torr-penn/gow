@@ -77,8 +77,8 @@ public class NoInternetScreen implements Screen, ApplicationListener {
                 lblConnect.remove();
                 lblPlayLocal.setText("Play!");
             } else {
+                if (game.isAudible()) GodOfWind.goodSound.play();
 
-                GodOfWind.goodSound.play();
             }
             actionCode = 0;
             return;

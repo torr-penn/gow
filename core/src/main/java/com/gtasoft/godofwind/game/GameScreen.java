@@ -21,7 +21,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gtasoft.godofwind.GodOfWind;
 
 import com.gtasoft.godofwind.game.contact.MyContactListener;
-import com.gtasoft.godofwind.game.entity.Cloud;
 import com.gtasoft.godofwind.game.entity.Player;
 import com.gtasoft.godofwind.game.entity.WinnerZoneBody;
 import com.gtasoft.godofwind.game.utils.CameraStyles;
@@ -37,6 +36,7 @@ public class GameScreen implements Screen, ApplicationListener {
 
     public boolean win = false;
     InputMultiplexer multiplexer;
+    int x = 0;
     private WindManager wm = new WindManager();
     private CloudManager cloudm;
     private boolean DEBUG = false;
@@ -45,7 +45,6 @@ public class GameScreen implements Screen, ApplicationListener {
     private Box2DDebugRenderer b2dr;
     private World world;
     private Player player;
-
     private GodOfWind gow;
     private SpriteBatch batch;
     private SpriteBatch infobatch;
@@ -61,16 +60,26 @@ public class GameScreen implements Screen, ApplicationListener {
     private FitViewport viewport;
     private Label lbl_time;
     private int level = 1;
-    private float delt = 0;
     private Label lbl_victory;
     private Label lbl_bounce;
+    private Label lbl_infoStar;
     private Label lbl_rank;
     private Label lbl_time_end;
     private ImageButton btnNext;
     private ImageButton btnBack;
     private ImageButton btnRetry;
+    private ImageButton btnTop;
+    private ImageButton btnLeft;
+    private ImageButton btnRight;
+    private ImageButton btnBottom;
     private int nbstar = -1;
     // private Cloud cloud1;
+    private int pushX = 0;
+    private int pushY = 0;
+    private int diffms = 0;
+    private double accumulator;
+    private double currentTime;
+    private float step = 1.0f / 60.0f;
 
     public GameScreen(GodOfWind game) {
         this.gow = game;
@@ -108,7 +117,7 @@ public class GameScreen implements Screen, ApplicationListener {
         compass = new Texture("img/board/arrow_wind.png");
         rotCompass = new Sprite(compass, 64, 64);
         rotCompass.setOrigin(32, 32);
-        rotCompass.setOriginBasedPosition(16 + 32, h - 64 - 16);
+        rotCompass.setOriginBasedPosition(16 + 32, h - 64 - 32);
 
         currentLevel = new Level("tile/level" + level + ".tmx", new Vector2(0, 0));
 
@@ -139,24 +148,107 @@ public class GameScreen implements Screen, ApplicationListener {
 
         lbl_time = new Label("--:--:--", gow.getGT().getSkin(), "time");
         lbl_time.setAlignment(Align.left);
-        lbl_time.setPosition(25, h - lbl_time.getHeight() - 10, Align.left);
+        lbl_time.setPosition(15, h - lbl_time.getHeight() - 10, Align.left);
+
 
         lbl_bounce = new Label("0", gow.getGT().getSkin(), "bounce");
         lbl_bounce.setAlignment(Align.left);
-        lbl_bounce.setPosition(w / 2 + 100, h / 2, Align.left);
+        lbl_bounce.setPosition(w / 2 + 100, h / 2 + 30, Align.left);
 
         lbl_time_end = new Label("--:--:--", gow.getGT().getSkin(), "bounce");
         lbl_time_end.setAlignment(Align.left);
-        lbl_time_end.setPosition(w / 2 + 100, h / 2 - 60, Align.left);
+        lbl_time_end.setPosition(w / 2 + 100, h / 2 - 30, Align.left);
+
+        lbl_infoStar = new Label(" ", gow.getGT().getSkin(), "infostar");
+        lbl_infoStar.setAlignment(Align.left);
+        lbl_infoStar.setPosition(w / 2 + 100, h / 2 - 90, Align.left);
 
         lbl_rank = new Label("0", gow.getGT().getSkin(), "bounce");
         lbl_rank.setAlignment(Align.left);
-        lbl_rank.setPosition(w / 2 + 100, h / 2 + 60, Align.left);
+        lbl_rank.setPosition(w / 2 + 100, h / 2 + 90, Align.left);
 
 
         btnBack = new ImageButton(gow.getGT().getSkin(), "back");
         btnNext = new ImageButton(gow.getGT().getSkin(), "next");
         btnRetry = new ImageButton(gow.getGT().getSkin(), "retry");
+
+        btnLeft = new ImageButton(gow.getGT().getSkin(), "arrowleft");
+        btnRight = new ImageButton(gow.getGT().getSkin(), "arrowright");
+        btnTop = new ImageButton(gow.getGT().getSkin(), "arrowtop");
+        btnBottom = new ImageButton(gow.getGT().getSkin(), "arrowbottom");
+
+        btnLeft.setSize(96, 96);
+        btnLeft.setPosition(w - 200, 4);
+        btnLeft.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent e, float x, float y, int point, int button) {
+                pushX += 1;
+                return;
+            }
+
+            @Override
+            public boolean touchDown(InputEvent e, float x, float y, int point, int button) {
+                pushX += -1;
+                //  System.out.println(" push left " + pushX);
+
+                return true;
+
+            }
+        });
+
+        btnRight.setSize(96, 96);
+        btnRight.setPosition(w - 100, 4);
+        btnRight.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent e, float x, float y, int point, int button) {
+                pushX += -1;
+                return;
+            }
+
+            @Override
+            public boolean touchDown(InputEvent e, float x, float y, int point, int button) {
+                pushX += 1;
+                //   System.out.println(" push right " + pushX);
+
+                return true;
+
+            }
+        });
+        btnBottom.setSize(96, 96);
+        btnBottom.setPosition(4, 4);
+        btnBottom.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent e, float x, float y, int point, int button) {
+                pushY += 1;
+                return;
+            }
+
+            @Override
+            public boolean touchDown(InputEvent e, float x, float y, int point, int button) {
+                pushY += -1;
+                //  System.out.println(" push bottom " + pushY);
+                return true;
+
+            }
+        });
+        btnTop.setSize(96, 96);
+        btnTop.setPosition(4, 104);
+        btnTop.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent e, float x, float y, int point, int button) {
+                pushY += -1;
+                return;
+            }
+
+            @Override
+            public boolean touchDown(InputEvent e, float x, float y, int point, int button) {
+                pushY += 1;
+                //  System.out.println(" push top " + pushY);
+
+                return true;
+
+            }
+        });
 
         btnBack.setSize(32, 32);
         btnBack.setPosition(w - 24 - 32, h - 24 - 32);
@@ -208,6 +300,10 @@ public class GameScreen implements Screen, ApplicationListener {
         });
         stage.addActor(lbl_time);
         stage.addActor(btnBack);
+        stage.addActor(btnTop);
+        stage.addActor(btnBottom);
+        stage.addActor(btnLeft);
+        stage.addActor(btnRight);
 
     }
 
@@ -255,7 +351,7 @@ public class GameScreen implements Screen, ApplicationListener {
                 cloudm.moveit();
             }
         }
-        lbl_time.setText(gow.getScore().printDiffWithoutMs() + "\t" + gow.getScore().getBounce());
+        lbl_time.setText(gow.getScore().getBounce() + " \t" + gow.getScore().printDiffWithoutMs());
         rotCompass.setRotation(wm.getMainWindDirectionDegree());
         return inputUpdate(delta);
 
@@ -277,6 +373,23 @@ public class GameScreen implements Screen, ApplicationListener {
         stage.addActor(lbl_bounce);
         stage.addActor(lbl_time_end);
         win = true;
+
+        if (!stage.getActors().contains(lbl_infoStar, true)) {
+            lbl_infoStar.remove();
+        }
+        if (stage.getActors().contains(btnTop, true)) {
+            btnTop.remove();
+        }
+        if (stage.getActors().contains(btnBottom, true)) {
+            btnBottom.remove();
+        }
+        if (stage.getActors().contains(btnLeft, true)) {
+            btnLeft.remove();
+        }
+        if (stage.getActors().contains(btnRight, true)) {
+            btnRight.remove();
+        }
+
         if (getPlayer().getCollisionNb() == 0) {
             if (!stage.getActors().contains(btnNext, true)) {
                 stage.addActor(btnNext);
@@ -288,33 +401,35 @@ public class GameScreen implements Screen, ApplicationListener {
             if (stage.getActors().contains(btnRetry, true)) {
                 btnRetry.remove();
             }
-            int i = (int) (Math.random() * 4);
-            if (i == 0) {
-                gow.snd_top1.play();
-            } else if (i == 1) {
-                gow.snd_top2.play();
-            } else if (i == 2) {
-                gow.snd_top3.play();
-            } else if (i == 3) {
-                gow.snd_top5.play();
+            if (gow.isAudible()) {
+                int i = (int) (Math.random() * 4);
+                if (i == 0) {
+                    gow.snd_top1.play();
+                } else if (i == 1) {
+                    gow.snd_top2.play();
+                } else if (i == 2) {
+                    gow.snd_top3.play();
+                } else if (i == 3) {
+                    gow.snd_top5.play();
+                }
             }
 
             Timer validTimer = new Timer();
-            if (rank == 1) {
+            if (rank == 1 && gow.isAudible()) {
                 validTimer.scheduleTask(new Timer.Task() {
                     public void run() { /* some code */
                         gow.number_1.play();
                     }
                 }, /* Note that libgdx uses float seconds, not integer milliseconds: */ 2f);
 
-            } else if (rank == 2) {
+            } else if (rank == 2 && gow.isAudible()) {
                 validTimer.scheduleTask(new Timer.Task() {
                     public void run() { /* some code */
                         gow.number_2.play();
                     }
                 }, /* Note that libgdx uses float seconds, not integer milliseconds: */ 2f);
 
-            } else if (rank == 3) {
+            } else if (rank == 3 && gow.isAudible()) {
                 validTimer.scheduleTask(new Timer.Task() {
                     public void run() { /* some code */
                         gow.number_3.play();
@@ -328,8 +443,10 @@ public class GameScreen implements Screen, ApplicationListener {
             if (stage.getActors().contains(btnNext, true)) {
                 btnNext.remove();
             }
-            int i = (int) (Math.random() * 5);
-            gow.snd_victory[i].play();
+            if (gow.isAudible()) {
+                int i = (int) (Math.random() * 5);
+                gow.snd_victory[i].play();
+            }
         }
         if (gow.getScore().getBounce() == 0) {
             nbstar = 1;
@@ -338,6 +455,22 @@ public class GameScreen implements Screen, ApplicationListener {
             }
             if (gow.getLu().getStarThreeTime(level) > gow.getScore().getDiffMs()) {
                 nbstar = nbstar + 1;
+            }
+            if (nbstar == 2) {
+                diffms = (int) Math.abs(gow.getLu().getStarThreeTime(level) - gow.getScore().getDiffMs());
+            } else if (nbstar == 1) {
+                diffms = (int) Math.abs(gow.getLu().getStarTwoTime(level) - gow.getScore().getDiffMs());
+            } else {
+                diffms = 0;
+            }
+            if (diffms != 0) {
+                if (!stage.getActors().contains(lbl_infoStar, true)) {
+                    stage.addActor(lbl_infoStar);
+                }
+
+                lbl_infoStar.setText("Next star is " + diffms + " ms ahead!");
+                lbl_infoStar.pack();
+
             }
 
         } else {
@@ -353,7 +486,7 @@ public class GameScreen implements Screen, ApplicationListener {
 //        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             this.dispose();
-            gow.setScreen(gow.mainMenuScreen);
+            gow.setScreen(gow.startScreen);
             return true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.M)) {
@@ -361,7 +494,15 @@ public class GameScreen implements Screen, ApplicationListener {
             return true;
         }
 
-        getPlayer().controller(delta);
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            gow.setWindowed();
+            return true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+            gow.setFullScreen();
+            return true;
+        }
+        getPlayer().controller(delta, pushX, pushY);
         return false;
     }
 
@@ -401,11 +542,11 @@ public class GameScreen implements Screen, ApplicationListener {
 
     }
 
-
     @Override
     public void show() {
         win = false;
         nbstar = -1;
+        diffms = 0;
         if (getWorld() == null) {
             if (stage != null) {
                 stage.clear();
@@ -424,17 +565,43 @@ public class GameScreen implements Screen, ApplicationListener {
 
     @Override
     public void render() {
-        if (update(Gdx.graphics.getDeltaTime())) {
+
+    }
+
+    @Override
+    public void render(float delta) {
+        if (x++ % 100 == 0) {
+            System.out.println(" delta: " + delta);
+        }
+
+        if (delta > 0.25f) delta = 0.25f;
+        accumulator += delta;
+
+        while (accumulator >= step) {
+
+            accumulator -= step;
+            world.step(step, 6, 2);
+
+        }
+        displayOperations(delta);
+    }
+
+    public void displayOperations(float delta) {
+        if (update(delta)) {
             return;
         }
 
 
         // Render
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+        Gdx.gl.glClearColor(0.8f, 1f, 0.8f, 1f);
         Gdx.gl.glClear(com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        batch.draw(gow.getGT().getImgSea(), -gow.getW() / 2, -gow.getH() / 2, gow.getW() * 3, gow.getH() * 3, 0, 96, 72, 0);
+        if (level == 9) {
+            batch.draw(gow.getGT().getImgSea(), -gow.getW() / 2, -gow.getH() / 2, gow.getW() * 10, gow.getH() * 10, 0, 0, 100, 100);
+        } else {
+            batch.draw(gow.getGT().getImgSea(), -gow.getW() / 2, -gow.getH() / 2, gow.getW() * 3, gow.getH() * 3, 0, 0, 100, 100);
+        }
         batch.end();
         if (!getPlayer().isVictorious() || gow.getScore().getBounce() > 0) {
 
@@ -466,22 +633,14 @@ public class GameScreen implements Screen, ApplicationListener {
         if (getPlayer().isVictorious() && gow.getScore().getBounce() == 0) {
             infobatch.draw(gow.getGT().getImgVictory(), gow.getW() / 3 - gow.getGT().getImgVictory().getWidth() / 2, (gow.getH() - gow.getGT().getImgVictory().getHeight()) / 2);
         } else {
-            infobatch.draw(gow.getGT().getImgScoreBox(), 0, gow.getH() - 38, 100, 30);
+            infobatch.draw(gow.getGT().getImgScoreBox(), 0, gow.getH() - 54, 140, 50);
         }
         infobatch.end();
 
-        stage.act(delt);
+        stage.act(delta);
         stage.draw();
-
     }
 
-    @Override
-    public void render(float delta) {
-        render();
-        delt = delta;
-
-
-    }
 
     @Override
     public void pause() {

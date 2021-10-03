@@ -3,6 +3,7 @@ package com.gtasoft.godofwind.game.entity;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -25,17 +26,24 @@ public class Player {
     private float hp, mp;
     private float SPEED = 15f;
     private TextureRegion current;
+    private TextureRegion[] boomAnim;
     private Body body;
 
     private float animState;
 
-    private Animation wLeft, wUp, wDown, wIn;
+    private Animation wLeft[], wUp[], wDown[], wIn[], aboom;
 
     private boolean applyWind = false;
     private int collisionNb = 0;
     private WindManager windManager = null;
     private boolean victory = false;
     private int nbpush = 0;
+    private float boompX = 0f;
+    private float boompY = 0f;
+    private int playerDirection = 0;
+    private boolean windIsNew = false;
+    private boolean noWindIsNew = false;
+    private int masterDirectionColor = 0;
 
     public Player(World world, GodOfWind gow, int level) {
 
@@ -51,84 +59,205 @@ public class Player {
 
         hp = 100;
         mp = 100;
+        wDown = new Animation[5];
+        wIn = new Animation[5];
+        wUp = new Animation[5];
+        wLeft = new Animation[5];
+
+
         initAnimations();
     }
 
+    // 0 - nocol
+    // 1 - red
+    // 2 - green
+    //3 - pink
+    // 4 yellow
     private void initAnimations() {
         animState = 0;
 
-        TextureAtlas atlastmp = new TextureAtlas(Gdx.files.internal("img/atlas/egg_runner.txt"));
+        atlas = new TextureAtlas(Gdx.files.internal("img/atlas/egg_runner.atlas"));
 
-        Array<TextureAtlas.AtlasRegion> ta = atlastmp.findRegions("wfront");
+        Array<TextureAtlas.AtlasRegion> ta;
 
-        wDown = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
-        wDown.setPlayMode(Animation.PlayMode.LOOP);
+        ta = atlas.findRegions("wfront");
+        wDown[0] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wDown[0].setPlayMode(Animation.PlayMode.LOOP);
 
 
-        ta = atlastmp.findRegions("wleft");
+        ta = atlas.findRegions("wleft");
 
-        wLeft = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
-        wLeft.setPlayMode(Animation.PlayMode.LOOP);
+        wLeft[0] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wLeft[0].setPlayMode(Animation.PlayMode.LOOP);
 
-        ta = atlastmp.findRegions("wback");
-        wUp = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
-        wUp.setPlayMode(Animation.PlayMode.LOOP);
+        ta = atlas.findRegions("wback");
+        wUp[0] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wUp[0].setPlayMode(Animation.PlayMode.LOOP);
 
-        ta = atlastmp.findRegions("sploutch");
-        wIn = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
-        wIn.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
 
-        atlas = new TextureAtlas(Gdx.files.internal("img/link.txt"));
+        ta = atlas.findRegions("wfrontred");
+        wDown[1] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wDown[1].setPlayMode(Animation.PlayMode.LOOP);
 
-        current = (TextureRegion) wDown.getKeyFrame(animState);
+
+        ta = atlas.findRegions("wleftred");
+
+        wLeft[1] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wLeft[1].setPlayMode(Animation.PlayMode.LOOP);
+
+        ta = atlas.findRegions("wbackred");
+        wUp[1] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wUp[1].setPlayMode(Animation.PlayMode.LOOP);
+
+        ta = atlas.findRegions("wfrontgreen");
+        wDown[2] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wDown[2].setPlayMode(Animation.PlayMode.LOOP);
+
+
+        ta = atlas.findRegions("wleftgreen");
+
+        wLeft[2] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wLeft[2].setPlayMode(Animation.PlayMode.LOOP);
+
+        ta = atlas.findRegions("wbackgreen");
+        wUp[2] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wUp[2].setPlayMode(Animation.PlayMode.LOOP);
+
+        ta = atlas.findRegions("wfrontp");
+        wDown[3] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wDown[3].setPlayMode(Animation.PlayMode.LOOP);
+
+
+        ta = atlas.findRegions("wleftp");
+
+        wLeft[3] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wLeft[3].setPlayMode(Animation.PlayMode.LOOP);
+
+        ta = atlas.findRegions("wbackp");
+        wUp[3] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wUp[3].setPlayMode(Animation.PlayMode.LOOP);
+        ta = atlas.findRegions("wfronty");
+        wDown[4] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wDown[4].setPlayMode(Animation.PlayMode.LOOP);
+
+
+        ta = atlas.findRegions("wlefty");
+
+        wLeft[4] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wLeft[4].setPlayMode(Animation.PlayMode.LOOP);
+
+        ta = atlas.findRegions("wbacky");
+        wUp[4] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wUp[4].setPlayMode(Animation.PlayMode.LOOP);
+
+
+        ta = atlas.findRegions("sploutch");
+        wIn[0] = new Animation<TextureAtlas.AtlasRegion>(.15f, ta);
+        wIn[0].setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
+
+
+        current = (TextureRegion) wDown[0].getKeyFrame(animState);
+
+
+        Texture boom1;
+        TextureRegion boomAnim1Aux[][];
+
+        boom1 = new Texture(Gdx.files.internal("img/board/boom/boom.png"));
+        boomAnim1Aux = TextureRegion.split(boom1, boom1.getWidth() / 4, boom1.getHeight() / 4); // #10
+        boomAnim = new TextureRegion[16];
+        int k = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                boomAnim[k++] = boomAnim1Aux[i][j];
+            }
+
+        }
+        aboom = new Animation<TextureRegion>(1f / 32f, boomAnim);
+        aboom.setPlayMode(Animation.PlayMode.NORMAL);
+
+
     }
 
-    public void controller(float delta) {
+    public void controller(float delta, int pushX, int pushY) {
 
         float x = 0, y = 0;
         if (victory) {
             animState += delta;
-            current = (TextureRegion) wIn.getKeyFrame(animState, true);
+            current = (TextureRegion) wIn[0].getKeyFrame(animState, true);
 
             return;
         }
 
-        boolean heldAttack = false;
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            x -= 1;
-            current = (TextureRegion) wLeft.getKeyFrame(animState, true);
-
-            if (!heldAttack) {
-
-                if (current.isFlipX())
-                    current.flip(true, false);
-            }
+        boolean refresh = false;
+//        if (applyWind && masterDirectionColor == 0) {
+//            masterDirectionColor = windManager.getMasterDirectionColor();
+//            refresh = true;
+//        }
+        if (applyWind && masterDirectionColor != windManager.getMasterDirectionColor()) {
+            masterDirectionColor = windManager.getMasterDirectionColor();
+            refresh = true;
         }
-        if (Gdx.input.isKeyPressed((Input.Keys.RIGHT))) {
+        if (!applyWind && masterDirectionColor != 0) {
+            masterDirectionColor = 0;
+            refresh = true;
+        }
+
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || pushX < 0) {
+            x -= 1;
+            playerDirection = 0;
+            current = (TextureRegion) wLeft[masterDirectionColor].getKeyFrame(animState, true);
+            if (current.isFlipX())
+                current.flip(true, false);
+        }
+        if (Gdx.input.isKeyPressed((Input.Keys.RIGHT)) || pushX > 0) {
             x += 1;
-            current = (TextureRegion) wLeft.getKeyFrame(animState, true);
+            playerDirection = 1;
+            current = (TextureRegion) wLeft[masterDirectionColor].getKeyFrame(animState, true);
+            if (!current.isFlipX())
+                current.flip(true, false);
+        }
+        if (Gdx.input.isKeyPressed((Input.Keys.UP)) || pushY > 0) {
+            y += 1;
+            playerDirection = 2;
+            current = (TextureRegion) wUp[masterDirectionColor].getKeyFrame(animState, true);
 
-            if (!heldAttack) {
+        }
+        if (Gdx.input.isKeyPressed((Input.Keys.DOWN)) || pushY < 0) {
+            y -= 1;
+            playerDirection = 3;
+            current = (TextureRegion) wDown[masterDirectionColor].getKeyFrame(animState, true);
 
+        }
+        if (refresh) {
+            if (playerDirection == 0) {
+                current = (TextureRegion) wLeft[masterDirectionColor].getKeyFrame(animState, true);
+            }
+            if (playerDirection == 1) {
+                current = (TextureRegion) wLeft[masterDirectionColor].getKeyFrame(animState, true);
                 if (!current.isFlipX())
                     current.flip(true, false);
             }
-        }
-        if (Gdx.input.isKeyPressed((Input.Keys.UP))) {
-            y += 1;
-            current = (TextureRegion) wUp.getKeyFrame(animState, true);
-
-        }
-        if (Gdx.input.isKeyPressed((Input.Keys.DOWN))) {
-            y -= 1;
-            current = (TextureRegion) wDown.getKeyFrame(animState, true);
+            if (playerDirection == 2) {
+                current = (TextureRegion) wUp[masterDirectionColor].getKeyFrame(animState, true);
+            }
+            if (playerDirection == 3) {
+                current = (TextureRegion) wDown[masterDirectionColor].getKeyFrame(animState, true);
+            }
 
         }
 
+
+        x = x + pushX;
+        if (x == 2) x = 1;
+        if (x == -2) x = -1;
         if (x != 0) {
             getBody().setLinearVelocity(getBody().getLinearVelocity().x + x * SPEED * delta, getBody().getLinearVelocity().y);
         }
+        y = y + pushY;
+        if (y == 2) y = 1;
+        if (y == -2) y = -1;
+
         if (y != 0) {
 
             getBody().setLinearVelocity(getBody().getLinearVelocity().x, y * SPEED * delta + getBody().getLinearVelocity().y);
@@ -158,12 +287,22 @@ public class Player {
     public void render(Batch batch) {
         float w = current.getRegionWidth();
         float h = current.getRegionHeight();
+
+
+        TextureRegion explosion = (TextureRegion) aboom.getKeyFrame(animState, true);
+        float aw = explosion.getRegionWidth();
+        float ah = explosion.getRegionHeight();
+
         batch.begin();
-        batch.draw(current, getBody().getPosition().x * Constants.PPM - w, getBody().getPosition().y * Constants.PPM - h,
-                0, 0, w, h, 2, 2, 0);
+        batch.draw(current, getBody().getPosition().x * Constants.PPM - w, getBody().getPosition().y * Constants.PPM - h, 0, 0, w, h, 2, 2, 0);
+
+        if (System.currentTimeMillis() - lastbong < 500) {
+            batch.draw(explosion, boompX - aw / 4, boompY - ah / 4,
+                    0, 0, aw / 2, ah / 2, 1, 1, 0);
+        }
+
         batch.end();
     }
-
 
     public Vector2 getPosition() {
         return getBody().getPosition();
@@ -172,7 +311,6 @@ public class Player {
     public void dispose() {
         atlas.dispose();
     }
-
 
     private Body createTwoCircle(World world, float xA, float yA, float radiusA, float xB, float yB, float radiusB) {
         Body pBody;
@@ -234,7 +372,7 @@ public class Player {
 
     public void addCollision() {
         if (isVictorious() && gow.getScore().getBounce() == 0) {
-            if (gow.op.isAudible()) {
+            if (gow.isAudible()) {
                 long time = System.currentTimeMillis();
                 if (time - lastbong > 200) {
                     int i = (int) (Math.random() * 4);
@@ -254,18 +392,32 @@ public class Player {
 
             return;
         }
-        if (!isVictorious()) {
-            this.collisionNb = getCollisionNb() + 1;
-        }
-        if (gow.op.isAudible()) {
-            long time = System.currentTimeMillis();
-            if (time - lastbong > 200) {
-                int i = (int) (Math.random() * 6);
-                gow.snd_bong[i].play();
-                lastbong = time;
+        long time = System.currentTimeMillis();
+
+
+        if (time - lastbong > 20) {
+            if (!isVictorious()) {
+                this.collisionNb = getCollisionNb() + 1;
             }
+
+            if (gow.isAudible()) {
+                if (time - lastbong > 200) {
+
+                    int i = (int) (Math.random() * 6);
+                    gow.snd_bong[i].play();
+                }
+            }
+            lastbong = time;
         }
+
     }
+
+    public void collisionOccured(float x, float y) {
+        //System.out.println(" collision occured : " + x + " y :" + y);
+        boompX = x * Constants.PPM;
+        boompY = y * Constants.PPM;
+    }
+
 
     public WindManager getWindManager() {
         return windManager;
@@ -293,7 +445,7 @@ public class Player {
 
     public void substractNbpush() {
         if (nbpush == 0) {
-            System.out.println(" already no push app wind : " + isApplyWind());
+
             setApplyWind(false);
             return;
         }

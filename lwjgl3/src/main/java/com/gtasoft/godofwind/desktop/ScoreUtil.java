@@ -21,7 +21,6 @@ public class ScoreUtil implements IScoreUtil {
 
     public void saveScore(Score score) {
         if (score.getStoptime() == 0) {
-            System.out.println(" error score invalid ");
             return;
         }
 
@@ -152,8 +151,11 @@ public class ScoreUtil implements IScoreUtil {
             if (asc.get(i).getLevel() == myscore.getLevel()) {
                 if (myscore.getBounce() > asc.get(i).getBounce()) {
                     rk++;
-                } else if (myscore.getScoreTime() > asc.get(i).getScoreTime()) {
-                    rk++;
+                } else if (myscore.getBounce() == asc.get(i).getBounce()) {
+
+                    if (myscore.getScoreTime() > asc.get(i).getScoreTime()) {
+                        rk++;
+                    }
                 }
             }
         }
@@ -179,7 +181,7 @@ public class ScoreUtil implements IScoreUtil {
                         asc = new ArrayList<Score>(Arrays.asList(sc));
                     }
                     if (asc != null) {
-                        //   System.out.println(" call local rank " + score1 + " [" + score1.printDiff() + "]");
+
                         return getLocalRank(asc, score1);
                     }
                 }
@@ -202,11 +204,15 @@ public class ScoreUtil implements IScoreUtil {
 
         for (int i = 0; i < asc.size(); i++) {
             if (asc.get(i).getLevel() == sco.getLevel()) {
+
                 if (sco.getBounce() > asc.get(i).getBounce()) {
+
                     rk++;
                 } else {
-                    if (sco.getDiffMs() > asc.get(i).getDiffMs()) {
-                        rk++;
+                    if (sco.getBounce() == asc.get(i).getBounce()) {
+                        if (sco.getDiffMs() > asc.get(i).getDiffMs()) {
+                            rk++;
+                        }
                     }
                 }
             }

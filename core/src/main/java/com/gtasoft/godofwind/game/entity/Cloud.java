@@ -129,6 +129,9 @@ public class Cloud {
         if (level == 8) {
             maxCloudDist = 1000f;
         }
+        if (level == 9) {
+            maxCloudDist = 4000f;
+        }
 
         int popAngle = (int) (Math.random() * 380);
 
@@ -156,7 +159,7 @@ public class Cloud {
 
         FixtureDef fd = new FixtureDef();
         fd.shape = shape;
-        fd.density = 3.f;
+        fd.density = 0.5f;
         fd.restitution = 0.0f;
         fd.friction = 0.5f;
         fd.filter.categoryBits = Constants.BIT_CLOUD;

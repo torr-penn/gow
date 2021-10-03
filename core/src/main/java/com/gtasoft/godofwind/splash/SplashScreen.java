@@ -49,14 +49,14 @@ public class SplashScreen implements Screen, ApplicationListener {
 
         imgBack = new Texture(Gdx.files.internal("img/menu/bg_space_1.png"));
         imgBack.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-        splashTime = System.currentTimeMillis() + 500;
+        splashTime = System.currentTimeMillis() + 1000;
         Timer t = new Timer();
         t.scheduleTask(new Timer.Task() {
             public void run() { /* some code */
                 game.ressourcesInit();
                 game.custominit();
             }
-        }, /* Note that libgdx uses float seconds, not integer milliseconds: */ 1f);
+        }, /* Note that libgdx uses float seconds, not integer milliseconds: */ 1.5f);
 
     }
 
@@ -89,7 +89,7 @@ public class SplashScreen implements Screen, ApplicationListener {
     @Override
     public void render(float delta) {
 
-        Gdx.gl.glClearColor(0f, 0f, 0f, 0.22f);
+        Gdx.gl.glClearColor(0.8f, 1f, 0.8f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (!translated) {
             camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
@@ -137,7 +137,9 @@ public class SplashScreen implements Screen, ApplicationListener {
 
     @Override
     public void show() {
-        Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        game.toggleFullScreen();
+        //Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+
     }
 
     @Override

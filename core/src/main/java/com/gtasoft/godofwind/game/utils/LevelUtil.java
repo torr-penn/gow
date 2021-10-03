@@ -38,6 +38,17 @@ public class LevelUtil {
 
     }
 
+    public String getSubtitle(int level) {
+        if (lvl_array != null) {
+
+
+            return lvl_array[level].getLabel();
+
+        }
+        return " ";
+
+    }
+
     public String helmName(int level) {
         String helmName = "rvjp";
         if (lvl_array != null) {

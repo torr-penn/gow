@@ -62,12 +62,25 @@ solution : use the good one
 
 E) impossible to use String.format()
 
-so :   this : String display = String.format("%02d:%02d:%02d.%03d", secs / 3600, (secs % 3600) / 60, (secs % 60), milisec);
+so this :
+String display = String.format("%02d:%02d:%02d.%03d", secs / 3600, (secs % 3600) / 60, (secs % 60), milisec);
 
 became String display = format("%s:%s:%s.%s", pad2Number(secs / 3600), pad2Number((secs % 3600) / 60), pad2Number(secs % 60), pad3Number(milisec));
 
 with :
-public String pad2Number(float f) { int i = (int) Math.floor(f); if (i < 10) { return "0" + i; } if (i > 99) { Gdx.app.log("[pad2Number]", " warning number too big"); return "" + i; } return "" + i; }
+
+    public String pad2Number(float f) {
+        int i = (int) Math.floor(f);
+        if (i < 10) { 
+            return "0" + i; 
+        }
+        if (i > 99) {
+            Gdx.app.log("[pad2Number]", " warning number too big");
+            return "" + i; 
+        }
+        return "" + i; 
+
+    }
 
     public String pad3Number(float f) {
         int i = (int) Math.floor(f);
@@ -81,7 +94,6 @@ public String pad2Number(float f) { int i = (int) Math.floor(f); if (i < 10) { r
             return "" + i;
         }
         Gdx.app.log("[pad3Number]", "warning number too big");
-
         return "" + i;
     }
 
@@ -102,8 +114,8 @@ GdxDefinition.gwt.xml
 
 	<extend-configuration-property name="gdx.reflect.include" value="com.gtasoft.godofwind.game.utils.LevelInfos"/>
 
-Also for some reason, file with extension .json is not managed in the same way as .txt in order to json parsing to work I had to rename file into .txt... :-( another mystery for me. then finally solution was a simple switch gradle 7.1.1 -> 7.2 // and jdk 1.8 -> 15 to make it work after no clue in
-parsing code change.
+Also for some reason, file with extension .json was not managed in the same way as .txt in order to json parsing to work I had to rename file into .txt... a mystery for me maybe a caching mechanism difference. Then final move successful was a simple switch gradle 7.1.1 -> 7.2 and jdk 1.8 -> 15 after
+no clue in code change.
 
 
 

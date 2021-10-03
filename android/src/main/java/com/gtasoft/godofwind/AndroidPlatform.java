@@ -16,7 +16,7 @@ public class AndroidPlatform implements NativePlatform {
 
 
     public Options.GameplayMode getPreferredGamePlay() {
-        return Options.GameplayMode.PC;
+        return Options.GameplayMode.TABLET;
 
     }
 
@@ -26,6 +26,6 @@ public class AndroidPlatform implements NativePlatform {
 
 
     public String getVersion() {
-        return "HTML";
+        return "ANDROID";
     }
 }

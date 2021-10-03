@@ -122,7 +122,7 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
         int wmiddle = (int) w / 2;
         int hmiddle = (int) h / 2;
 
-        lbl_title = new Label("GOD OF WIND ", skin, "title");
+        lbl_title = new Label("GOD OF WIND", skin, "title");
         if (!game.getLu().isok()) {
 
             lbl_version.setText(game.getVersion() + ".x");
@@ -170,8 +170,8 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
         btnHelp.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent e, float x, float y, int point, int button) {
-
-                new HelpDialog("How to play?", skin, "default").show(stage);
+                game.setScreen(game.helpScreen);
+                //new HelpDialog("How to play?", skin, "default").show(stage);
                 return;
             }
 
@@ -186,7 +186,8 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
         btnSettings.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent e, float x, float y, int point, int button) {
-                new PreferenceDialog("Super Advanced Settings system", skin, "default").show(stage);
+                // new PreferenceDialog("Super Advanced Settings system", skin, "default").show(stage);
+                game.setScreen(game.optionsScreen);
                 return;
             }
 
@@ -243,7 +244,9 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
         stage.addActor(btnHelp);
         stage.addActor(btnSettings);
         stage.addActor(btnRanking);
-        stage.addActor(btnExit);
+        if (!"HTML".equals(game.getVersion())) {
+            stage.addActor(btnExit);
+        }
         stage.addActor(lbl_version);
         stage.addActor(lbl_debug);
         stage.addActor(lbl_play);
@@ -268,7 +271,7 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
     @Override
     public void render(float delta) {
 
-        Gdx.gl.glClearColor(0f, 0f, 0f, 0.22f);
+        Gdx.gl.glClearColor(0.8f, 1f, 0.8f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (!translated) {
             camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
@@ -328,6 +331,14 @@ public class MenuScreen implements Screen, ApplicationListener, InputProcessor {
         }
         if (Gdx.input.isKeyPressed(Input.Keys.M)) {
             game.toggleMusic();
+            return true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            game.setWindowed();
+            return true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+            game.setFullScreen();
             return true;
         }
 

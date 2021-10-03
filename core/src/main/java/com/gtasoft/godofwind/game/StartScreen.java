@@ -17,12 +17,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.gtasoft.godofwind.GodOfWind;
+import com.gtasoft.godofwind.game.utils.LevelUtil;
 import com.gtasoft.godofwind.ressource.Point;
 import com.gtasoft.godofwind.score.Score;
 
 
 public class StartScreen implements Screen, ApplicationListener, InputProcessor {
-    public final static int LVLMAX = 8;
+    public final static int LVLMAX = 9;
     private static ImageButton btnPlay;
     private static ImageButton btnBack;
     private static ImageButton btnNext;
@@ -31,6 +32,7 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
     private static ImageButton btnMusic;
 
     Label lbl_title;
+    Label lbl_subtitle;
     Label lbl_level;
     Label lbl_def_wind;
     Stage stage;
@@ -123,6 +125,10 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
         lbl_title.setPosition(w / 2, h - lbl_title.getHeight() + 10, Align.center);
 
         lbl_level = new Label("LEVEL " + getLevel(), skin, "subtitle");
+
+        lbl_subtitle = new Label("", skin, "time");
+        lbl_subtitle.setAlignment(Align.center);
+        lbl_subtitle.setPosition(w / 2, h - 175 - lbl_level.getHeight(), Align.center);
 
         lbl_level.setColor(skin.getColor("orange"));
         lbl_level.setAlignment(Align.center);
@@ -279,6 +285,7 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
         stage.addActor(btnPrevious);
         stage.addActor(lbl_play);
         stage.addActor(lbl_title);
+        stage.addActor(lbl_subtitle);
         stage.addActor(lbl_level);
         stage.addActor(lbl_def_wind);
         multiplexer.addProcessor(stage);
@@ -293,17 +300,19 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
         int lvlMin = 0;
         int nblvl = LVLMAX - lvlMin;
         if (getLevel() == lvlMin && ldiff < 0) {
-            game.snd_bong[2].play();
-            return;
-        }
 
-        setLevel((ldiff + (getLevel())) % (nblvl + 1));
+            setLevel(LVLMAX);
+        } else {
+
+            setLevel((ldiff + (getLevel())) % (nblvl + 1));
+        }
 
         imgHelm = new Texture(Gdx.files.internal("img/board/helm_" + game.getLu().helmName(getLevel()) + ".png"));
         imgLevel = new Texture(Gdx.files.internal("img/board/preview_lvl" + getLevel() + ".png"));
         helmrotation.setRegion(imgHelm);
 
         lbl_level.setText("LEVEL " + getLevel());
+        lbl_subtitle.setText(game.getLu().getSubtitle(getLevel()));
     }
 
     public Stage getStage() {
@@ -319,7 +328,7 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
     @Override
     public void render(float delta) {
 
-        Gdx.gl.glClearColor(0f, 0f, 0f, 0.22f);
+        Gdx.gl.glClearColor(0.8f, 1f, 0.8f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if (!translated) {
             camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
@@ -366,8 +375,10 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
         if (sb == null || (createdLvl != level)) {
             create();
         }
+        lbl_subtitle.setText(game.getLu().getSubtitle(getLevel()));
         game.setScore(new Score(game.getOp()));
-        helmrotation.setRotation(0);
+        helmrotation.setRotation(game.getOp().getHelmRotation());
+
         if (game.isPlayMusic()) {
             stage.addActor(btnMusic);
             if (stage.getActors().contains(btnNoMusic, true)) {
@@ -454,7 +465,14 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
             helmrotation.rotate(90f);
             startAngle = helmrotation.getRotation() % 360;
         }
-
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            game.setWindowed();
+            return true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+            game.setFullScreen();
+            return true;
+        }
         return true;
     }
 
@@ -565,7 +583,7 @@ public class StartScreen implements Screen, ApplicationListener, InputProcessor 
     public void readyTogo() {
         float rotDeg = helmrotation.getRotation() % 360;
         game.getLu().setupWind(getLevel(), wm, rotDeg);
-
+        game.getOp().setHelmRotation(helmrotation.getRotation());
         game.gameScreen.setWm(wm);
         game.gameScreen.setLevel(getLevel());
         game.getScore().setLevel(level);

@@ -9,7 +9,9 @@ import com.badlogic.gdx.audio.Sound;
 
 import com.gtasoft.godofwind.game.StartScreen;
 import com.gtasoft.godofwind.game.utils.LevelUtil;
+import com.gtasoft.godofwind.help.HelpScreen;
 import com.gtasoft.godofwind.options.Options;
+import com.gtasoft.godofwind.options.OptionsScreen;
 import com.gtasoft.godofwind.ressource.*;
 import com.gtasoft.godofwind.score.Score;
 import com.gtasoft.godofwind.score.ScoreScreen;
@@ -55,6 +57,8 @@ public class GodOfWind extends Game implements ApplicationListener {
     public SplashScreen splashScreen;
     public StartScreen startScreen;
     public ScoreScreen scoreScreen;
+    public HelpScreen helpScreen;
+    public OptionsScreen optionsScreen;
 
     public NetworkTools ntools;
     public Options op;
@@ -67,6 +71,7 @@ public class GodOfWind extends Game implements ApplicationListener {
     private int h = 768;
     private Score score;
     private boolean playMusic = false;
+    private boolean fullScreen = false;
 
     public GodOfWind(NativePlatform np) {
 
@@ -173,6 +178,33 @@ public class GodOfWind extends Game implements ApplicationListener {
 
     }
 
+    public void toggleFullScreen() {
+        if (!isAndroid()) {
+            if (!isFullScreen()) {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                setFullScreen(true);
+            } else {
+                Gdx.graphics.setWindowedMode(1280, 768);
+                setFullScreen(false);
+            }
+        }
+
+    }
+
+    public void setFullScreen() {
+        if (!isAndroid()) {
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+            setFullScreen(true);
+        }
+    }
+
+    public void setWindowed() {
+        if (!isAndroid()) {
+            Gdx.graphics.setWindowedMode(1280, 768);
+            setFullScreen(false);
+        }
+    }
+
     public void toggleMusic() {
         if (!isPlayMusic()) {
             playMusic();
@@ -182,6 +214,21 @@ public class GodOfWind extends Game implements ApplicationListener {
             setPlayMusic(false);
         }
 
+    }
+
+    public void toggleSound() {
+        if (op != null) {
+            if (op.isAudible()) {
+                op.setPlaySound(false);
+            } else {
+                op.setPlaySound(true);
+            }
+        }
+    }
+
+    public boolean isAudible() {
+        if (op == null) return true;
+        return op.isAudible();
     }
 
     public int initClient() {
@@ -202,6 +249,9 @@ public class GodOfWind extends Game implements ApplicationListener {
         this.gameScreen = new GameScreen(this);
         this.mainMenuScreen = new MenuScreen(this);
         this.noInternetScreen = new NoInternetScreen(this);
+        this.helpScreen = new HelpScreen(this);
+        this.optionsScreen = new OptionsScreen(this);
+
 
     }
 
@@ -299,5 +349,13 @@ public class GodOfWind extends Game implements ApplicationListener {
 
     public void setPlayMusic(boolean playMusic) {
         this.playMusic = playMusic;
+    }
+
+    public boolean isFullScreen() {
+        return fullScreen;
+    }
+
+    private void setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
     }
 }

@@ -45,8 +45,10 @@ public class ScoreUtil implements IScoreUtil {
                 if (sco.getBounce() > asc.get(i).getBounce()) {
                     rk++;
                 } else {
-                    if (sco.getDiffMs() > asc.get(i).getDiffMs()) {
-                        rk++;
+                    if (sco.getBounce() == asc.get(i).getBounce()) {
+                        if (sco.getDiffMs() > asc.get(i).getDiffMs()) {
+                            rk++;
+                        }
                     }
                 }
             }

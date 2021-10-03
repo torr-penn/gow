@@ -39,12 +39,13 @@ public class HelpDialog extends Dialog {
 
 
         Group myGroup = new Group();
-        Label labProposal = new Label(" 1- Define wind orientation \n (space, Ctrl, mouse, arrows...) ", getSkin());//We respect your will. No shortcut!
-        Label labSubProposal = new Label(" 2- Then play using arrows\n And please... Do not break the Egg!", getSkin());//"There is not much to do in the spaceship.\n You have spare time anyway..."
+        Label labProposal = new Label("Define wind orientation using helm", getSkin());
+        Label labSubProposal = new Label("Then play using arrows, but please...\nDo not break the Egg!", getSkin());
         Label.LabelStyle ls = new Label.LabelStyle();
         ls.fontColor = Color.WHITE;
         ls.font = getSkin().getFont("montserrat");
         labProposal.setStyle(ls);
+        labProposal.setFontScale(0.7f);
         labSubProposal.setFontScale(0.7f);
         labProposal.setPosition(0, 70);
 
